@@ -30,8 +30,7 @@ module "subnets" {
 }
 
 /******************************************
-	Routes
- *****************************************/
+
 module "routes" {
   source            = "./modules/routes"
   project_id        = var.project_id
@@ -39,10 +38,11 @@ module "routes" {
   routes            = var.routes
   module_depends_on = [module.subnets.subnets]
 }
-
+	Routes
+ *****************************************/
 /******************************************
 	Firewall rules
- *****************************************/
+
 locals {
   rules = [
     for f in var.firewall_rules : {
@@ -81,3 +81,4 @@ module "private_service_access" {
   address_name  = var.private_service_access_config.address_name
   prefix_length = var.private_service_access_config.prefix_length
 }
+ *****************************************/

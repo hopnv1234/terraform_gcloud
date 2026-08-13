@@ -56,21 +56,21 @@ variable "subnets" {
   description = "The list of subnets being created"
     default = [
     {
-      subnet_name           = "subnet_mgmt"
+      subnet_name           = "SubnetMgmt"
       subnet_ip             = "10.0.1.0/24"
       subnet_region         = "us-central1"
       subnet_private_access = "true"
       description           = "Subnet for Management"
     },
     {
-      subnet_name           = "subnet_gke"
+      subnet_name           = "SubnetGke"
       subnet_ip             = "10.0.4.0/24"
       subnet_region         = "us-central1"
       subnet_private_access = "true"
       description           = "Subnet for GKE Workloads"
     },
     {
-      subnet_name           = "Subnet_Internet"
+      subnet_name           = "SubnetInternet"
       subnet_ip             = "10.0.0.0/24"
       subnet_region         = "us-central1"
       subnet_private_access = "true"

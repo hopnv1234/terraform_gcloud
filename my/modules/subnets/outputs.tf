@@ -15,6 +15,16 @@
  */
 
 output "subnets" {
-  value       = google_compute_subnetwork.subnetwork
-  description = "The created subnet resources"
+  value = {
+    for k, v in google_compute_subnetwork.subnetwork :
+    k => {
+      name           = v.name
+      id             = v.id
+      region         = v.region
+      ip_cidr_range  = v.ip_cidr_range
+      self_link      = v.self_link
+      gateway_address = v.gateway_address
+    }
+  }
+  description = "Useful subnet metadata"
 }

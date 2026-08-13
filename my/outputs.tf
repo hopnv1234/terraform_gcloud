@@ -48,18 +48,17 @@ output "subnets_private_access" {
   value       = [for subnet in module.subnets.subnets : subnet.private_ip_google_access]
   description = "Whether the subnets will have access to Google APIs without a public IP"
 }
-
-output "subnets_flow_logs" {
-  value       = [for subnet in module.subnets.subnets : subnet.enable_flow_logs]
-  description = "Whether the subnets will have VPC flow logs enabled"
-}
-
 output "subnets_secondary_ranges" {
   value       = [for subnet in module.subnets.subnets : subnet.secondary_ip_range]
   description = "The secondary ranges associated with these subnets"
 }
-
+output "subnets_flow_logs" {
+  value       = [for subnet in module.subnets.subnets : subnet.enable_flow_logs]
+  description = "Whether the subnets will have VPC flow logs enabled"
+}
+/*
 output "route_names" {
   value       = []
   description = "The routes associated with this VPC"
 }
+*/

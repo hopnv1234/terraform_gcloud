@@ -28,7 +28,7 @@ output "project_id" {
   value       = module.vpc.project_id
   description = "VPC project id"
 }
-
+/*
 output "subnets_names" {
   value       = [for subnet in module.subnets.subnets : subnet.name]
   description = "The names of the subnets being created"
@@ -56,7 +56,6 @@ output "subnets_flow_logs" {
   value       = [for subnet in module.subnets.subnets : subnet.enable_flow_logs]
   description = "Whether the subnets will have VPC flow logs enabled"
 }
-/*
 output "route_names" {
   value       = []
   description = "The routes associated with this VPC"

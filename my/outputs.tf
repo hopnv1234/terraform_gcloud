@@ -15,51 +15,51 @@
  */
 
 output "network_name" {
-  value       = module.IBM_Lab.network_name
+  value       = module.vpc.network_name
   description = "The name of the VPC being created"
 }
 
 output "network_self_link" {
-  value       = module.IBM_Lab.network_self_link
+  value       = module.vpc.network_self_link
   description = "The URI of the VPC being created"
 }
 
 output "project_id" {
-  value       = module.IBM_Lab.project_id
+  value       = module.vpc.project_id
   description = "VPC project id"
 }
 
 output "subnets_names" {
-  value       = module.IBM_Lab.subnets_names
+  value       = [for subnet in module.subnets.subnets : subnet.name]
   description = "The names of the subnets being created"
 }
 
 output "subnets_ips" {
-  value       = module.IBM_Lab.subnets_ips
-  description = "The IP and cidrs of the subnets being created"
+  value       = [for subnet in module.subnets.subnets : subnet.ip_cidr_range]
+  description = "The IP CIDR ranges of the subnets being created"
 }
 
 output "subnets_regions" {
-  value       = module.IBM_Lab.subnets_regions
-  description = "The region where subnets will be created"
+  value       = [for subnet in module.subnets.subnets : subnet.region]
+  description = "The regions where subnets will be created"
 }
 
 output "subnets_private_access" {
-  value       = module.IBM_Lab.subnets_private_access
-  description = "Whether the subnets will have access to Google API's without a public IP"
+  value       = [for subnet in module.subnets.subnets : subnet.private_ip_google_access]
+  description = "Whether the subnets will have access to Google APIs without a public IP"
 }
 
 output "subnets_flow_logs" {
-  value       = module.IBM_Lab.subnets_flow_logs
+  value       = [for subnet in module.subnets.subnets : subnet.enable_flow_logs]
   description = "Whether the subnets will have VPC flow logs enabled"
 }
 
 output "subnets_secondary_ranges" {
-  value       = module.IBM_Lab.subnets_secondary_ranges
+  value       = [for subnet in module.subnets.subnets : subnet.secondary_ip_range]
   description = "The secondary ranges associated with these subnets"
 }
 
 output "route_names" {
-  value       = module.IBM_Lab.route_names
+  value       = []
   description = "The routes associated with this VPC"
 }

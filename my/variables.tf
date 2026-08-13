@@ -20,10 +20,49 @@ variable "project_id" {
   default = "recon-ng-56089"
 }
 variable "network_name" {
-  description = "IBM_Network_Lab"
+  description = "vpc_ibm_lab"
   type        = string
-  default = "IBM_Network_Lab" 
+  default     = "vpc_ibm_lab"
 }
+
+variable "routes" {
+  type        = list(any)
+  description = "Route definitions to attach to the network"
+  default     = []
+}
+
+variable "firewall_rules" {
+  type        = list(any)
+  description = "Firewall rules to create on the network"
+  default     = []
+}
+
+variable "ingress_rules" {
+  type        = list(any)
+  description = "Ingress firewall rules input for the firewall module"
+  default     = []
+}
+
+variable "egress_rules" {
+  type        = list(any)
+  description = "Egress firewall rules input for the firewall module"
+  default     = []
+}
+
+variable "private_service_access_config" {
+  type = object({
+    enable_private_services_connection = bool
+    address_name                       = string
+    prefix_length                      = number
+  })
+  description = "Private service access configuration for the network"
+  default = {
+    enable_private_services_connection = false
+    address_name                       = ""
+    prefix_length                      = 24
+  }
+}
+
 variable "auto_create_subnetworks" {
   type        = bool
   description = "When set to true, the network is created in 'auto subnet mode' and it will create a subnet for each region automatically across the 10.128.0.0/9 address range. When set to false, the network is created in 'custom subnet mode' so the user can explicitly connect subnetwork resources."

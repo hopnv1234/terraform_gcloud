@@ -20,9 +20,9 @@ variable "project_id" {
   default = "recon-ng-56089"
 }
 variable "network_name" {
-  description = "vpc_ibm_lab"
+  description = "vpcibmlab"
   type        = string
-  default     = "vpc_ibm_lab"
+  default     = "vpcibmlab"
 }
 
 variable "routes" {

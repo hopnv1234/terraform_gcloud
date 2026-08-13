@@ -22,7 +22,7 @@ variable "project_id" {
 variable "network_name" {
   description = "IBM_Network_Lab"
   type        = string
-  default = "IBM_Lab" 
+  default = "IBM_Network_Lab" 
 }
 variable "auto_create_subnetworks" {
   type        = bool

@@ -23,7 +23,7 @@ variable "project_id" {
 variable "network_name" {
   description = "The name of the network being created"
   type        = string
-  default = "vpc_ibm_lab"
+  default = "vpcibmlab"
 }
 
 variable "routing_mode" {

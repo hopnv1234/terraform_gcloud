@@ -22,10 +22,17 @@ module "vpc" {
  *****************************************/
 
 module "subnets" {
-  source           = "./modules/subnets"
-  project_id       = var.project_id
-  network_name     = module.vpc.network_name
+  source       = "./modules/subnets"
+  project_id   = var.project_id
+  network_name = module.vpc.network_name
 }
+
+module "compute_instance" {
+  source     = "./modules/compute_instance"
+  project_id = var.project_id
+  network    = module.vpc.network_name
+}
+
 /******************************************
 
 module "routes" {

@@ -26,20 +26,20 @@ variable "network" {
   default     = "vpc_ibm_lab"
 }
 
-variable "subnet1" {
+variable "subnet-mgmt" {
   description = "Subnet to deploy to. Only one of network or subnetwork should be specified."
   type        = string
-  default     = "subnet_mgmt"
+  default     = "subnet-mgmt"
 }
-variable "subnet2" {
+variable "subnet-gke" {
   description = "Subnet to deploy to. Only one of network or subnetwork should be specified."
   type        = string
-  default     = "subnet_gke"
+  default     = "subnet-gke"
 }
-variable "subnet3" {
+variable "subnet-internet" {
   description = "Subnet to deploy to. Only one of network or subnetwork should be specified."
   type        = string
-  default     = "Subnet_Internet"
+  default     = "subnet-internet"
 }
 
 variable "subnetwork_project" {

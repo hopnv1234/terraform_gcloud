@@ -28,9 +28,10 @@ module "subnets" {
 }
 
 module "compute_instance" {
-  source     = "./modules/compute_instance"
-  project_id = var.project_id
-  network    = module.vpc.network_name
+  source           = "./modules/compute_instance"
+  project_id       = var.project_id
+  network          = module.vpc.network_name
+  instance_template = ""
 }
 
 /******************************************

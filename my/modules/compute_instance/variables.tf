@@ -90,8 +90,9 @@ variable "num_instances" {
 }
 
 variable "instance_template" {
-  description = "Instance template self_link used to create compute instances"
+  description = "Optional compatibility field for the VM module interface. This local module creates instances directly and does not use an instance template."
   type        = string
+  default     = ""
 }
 
 variable "region" {

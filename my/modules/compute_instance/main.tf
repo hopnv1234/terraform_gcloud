@@ -1,7 +1,7 @@
 
 resource "google_compute_instance" "bastion-host" {
   project      = var.project_id # Replace with your project ID in quotes
-  zone         = "us-central1-b"
+  zone         = var.zone
   name         = "bastion-host"
   machine_type = "e2-medium"
   metadata_startup_script = <<-EOT
@@ -38,7 +38,7 @@ resource "google_compute_instance" "bastion-host" {
 
 resource "google_compute_instance" "gitlab-ce" {
   project      = var.project_id # Replace with your project ID in quotes
-  zone         = "us-central1-b"
+  zone         = var.zone
   name         = "gitlab-ce"
   machine_type = "e2-standard-2"
   metadata_startup_script = <<-EOT
@@ -69,7 +69,7 @@ resource "google_compute_instance" "gitlab-ce" {
 
 resource "google_compute_instance" "tfe" {
   project      = var.project_id # Replace with your project ID in quotes
-  zone         = "us-central1-b"
+  zone         = var.zone
   name         = "tfe"
   machine_type = "e2-standard-2"
   metadata_startup_script = <<-EOT
@@ -101,7 +101,7 @@ resource "google_compute_instance" "tfe" {
 
 resource "google_compute_instance" "vault-server" {
   project      = var.project_id # Replace with your project ID in quotes
-  zone         = "us-central1-b"
+  zone         = var.zone
   name         = "vault-server"
   machine_type = "e2-standard-2"
   metadata_startup_script = <<-EOT

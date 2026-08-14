@@ -145,3 +145,6 @@ variable "resource_manager_tags" {
   type        = map(string)
   default     = null
 }
+variable "zone" {
+  default = null
+}

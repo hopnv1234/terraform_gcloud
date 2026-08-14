@@ -12,6 +12,7 @@ resource "google_compute_instance" "bastion-host" {
   zone         = local.selected_zone
   name         = "bastion-host"
   machine_type = "e2-medium"
+  tags         = ["bastion"]
   metadata_startup_script = <<-EOT
     set -eux
     ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime

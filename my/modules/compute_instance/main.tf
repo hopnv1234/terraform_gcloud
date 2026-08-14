@@ -4,6 +4,19 @@ resource "google_compute_instance" "bastion-host" {
   zone         = "us-central1-b"
   name         = "bastion-host"
   machine_type = "e2-medium"
+  metadata_startup_script = <<-EOT
+    set -eux
+    ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
+    echo 'Asia/Bangkok' > /etc/timezone
+    if ! command -v cron >/dev/null 2>&1; then
+      apt-get update
+      DEBIAN_FRONTEND=noninteractive apt-get install -y cron
+    fi
+    echo '0 19 * * * root /sbin/shutdown -h +1' > /etc/cron.d/auto-shutdown
+    chmod 0644 /etc/cron.d/auto-shutdown
+    systemctl enable cron >/dev/null 2>&1 || true
+    systemctl restart cron >/dev/null 2>&1 || true
+  EOT
   boot_disk {
     initialize_params {
       image = "projects/ubuntu-os-cloud/global/images/ubuntu-minimal-2204-jammy-v20260805"
@@ -28,6 +41,19 @@ resource "google_compute_instance" "gitlab-ce" {
   zone         = "us-central1-b"
   name         = "gitlab-ce"
   machine_type = "e2-standard-2"
+  metadata_startup_script = <<-EOT
+    set -eux
+    ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
+    echo 'Asia/Bangkok' > /etc/timezone
+    if ! command -v cron >/dev/null 2>&1; then
+      apt-get update
+      DEBIAN_FRONTEND=noninteractive apt-get install -y cron
+    fi
+    echo '0 19 * * * root /sbin/shutdown -h +1' > /etc/cron.d/auto-shutdown
+    chmod 0644 /etc/cron.d/auto-shutdown
+    systemctl enable cron >/dev/null 2>&1 || true
+    systemctl restart cron >/dev/null 2>&1 || true
+  EOT
   boot_disk {
     initialize_params {
       image = "projects/ubuntu-os-cloud/global/images/ubuntu-minimal-2204-jammy-v20260805"
@@ -46,6 +72,19 @@ resource "google_compute_instance" "tfe" {
   zone         = "us-central1-b"
   name         = "tfe"
   machine_type = "e2-standard-2"
+  metadata_startup_script = <<-EOT
+    set -eux
+    ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
+    echo 'Asia/Bangkok' > /etc/timezone
+    if ! command -v cron >/dev/null 2>&1; then
+      apt-get update
+      DEBIAN_FRONTEND=noninteractive apt-get install -y cron
+    fi
+    echo '0 19 * * * root /sbin/shutdown -h +1' > /etc/cron.d/auto-shutdown
+    chmod 0644 /etc/cron.d/auto-shutdown
+    systemctl enable cron >/dev/null 2>&1 || true
+    systemctl restart cron >/dev/null 2>&1 || true
+  EOT
   boot_disk {
     initialize_params {
       image = "projects/ubuntu-os-cloud/global/images/ubuntu-minimal-2204-jammy-v20260805"
@@ -65,6 +104,19 @@ resource "google_compute_instance" "vault-server" {
   zone         = "us-central1-b"
   name         = "vault-server"
   machine_type = "e2-standard-2"
+  metadata_startup_script = <<-EOT
+    set -eux
+    ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
+    echo 'Asia/Bangkok' > /etc/timezone
+    if ! command -v cron >/dev/null 2>&1; then
+      apt-get update
+      DEBIAN_FRONTEND=noninteractive apt-get install -y cron
+    fi
+    echo '0 19 * * * root /sbin/shutdown -h +1' > /etc/cron.d/auto-shutdown
+    chmod 0644 /etc/cron.d/auto-shutdown
+    systemctl enable cron >/dev/null 2>&1 || true
+    systemctl restart cron >/dev/null 2>&1 || true
+  EOT
   boot_disk {
     initialize_params {
       image = "projects/ubuntu-os-cloud/global/images/ubuntu-minimal-2204-jammy-v20260805"

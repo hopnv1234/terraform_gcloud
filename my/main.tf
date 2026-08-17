@@ -35,12 +35,22 @@ module "compute_instance" {
 }
 
 module "firewall_rules" {
-  source        = "./modules/firewall-rules"
-  project_id    = var.project_id
-  network_name  = module.vpc.network_name
-  bastion_tag   = "bastion"
+  source            = "./modules/firewall-rules"
+  project_id        = var.project_id
+  network_name      = module.vpc.network_name
+  bastion_tag       = "bastion"
   ssh_source_ranges = ["0.0.0.0/0"]
-  ssh_port      = 22
+  ssh_port          = 22
+}
+
+module "private_service_access" {
+  source = "./modules/private-service-access"
+  count  = var.private_service_access_config.enable_private_services_connection ? 1 : 0
+
+  project_id    = var.project_id
+  network_id    = module.vpc.network_id
+  address_name  = var.private_service_access_config.address_name
+  prefix_length = var.private_service_access_config.prefix_length
 }
 
 /******************************************

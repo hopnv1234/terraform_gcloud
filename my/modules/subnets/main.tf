@@ -15,7 +15,7 @@ resource "google_compute_subnetwork" "subnetwork" {
   name                       = each.value.subnet_name
   ip_cidr_range              = each.value.subnet_ip
   region                     = var.subnets_region != null ? var.subnets_region : each.value.subnet_region
-  private_ip_google_access   = lookup(each.value, "subnet_private_access", "false")
+  private_ip_google_access   = tostring(lookup(each.value, "subnet_private_access", "false")) == "true"
   private_ipv6_google_access = lookup(each.value, "subnet_private_ipv6_access", null)
   dynamic "log_config" {
     for_each = coalesce(lookup(each.value, "subnet_flow_logs", null), false) ? [{

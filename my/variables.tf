@@ -57,9 +57,9 @@ variable "private_service_access_config" {
   })
   description = "Private service access configuration for the network"
   default = {
-    enable_private_services_connection = false
-    address_name                       = ""
-    prefix_length                      = 24
+    enable_private_services_connection = true
+    address_name                       = "google-private-services"
+    prefix_length                      = 16
   }
 }
 

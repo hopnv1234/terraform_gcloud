@@ -44,6 +44,7 @@ module "firewall_rules" {
 }
 
 resource "google_dns_managed_zone" "private_internal" {
+  project  = var.project_id
   name     = "ibm-lab-internal"
   dns_name = "ibm-lab.internal."
 

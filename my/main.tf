@@ -43,6 +43,34 @@ module "firewall_rules" {
   ssh_port          = 22
 }
 
+resource "google_dns_managed_zone" "private_internal" {
+  name     = "ibm-lab-internal"
+  dns_name = "ibm-lab.internal."
+
+  visibility = "private"
+
+  private_visibility_config {
+    networks {
+      network_url = module.vpc.network_self_link
+    }
+  }
+}
+
+resource "google_dns_record_set" "vm_internal_records" {
+  for_each = {
+    "bastion-host" = module.compute_instance.vm_summary.bastion_host.ip
+    "gitlab-ce"    = module.compute_instance.vm_summary.gitlab_ce.ip
+    "tfe"          = module.compute_instance.vm_summary.tfe.ip
+    "vault-server" = module.compute_instance.vm_summary.vault_server.ip
+  }
+
+  managed_zone = google_dns_managed_zone.private_internal.name
+  name         = "${each.key}.${google_dns_managed_zone.private_internal.dns_name}"
+  type         = "A"
+  ttl          = 300
+  rrdatas      = [each.value]
+}
+
 module "private_service_access" {
   source = "./modules/private-service-access"
   count  = var.private_service_access_config.enable_private_services_connection ? 1 : 0

@@ -58,6 +58,8 @@ resource "google_dns_managed_zone" "private_internal" {
 }
 
 resource "google_dns_record_set" "vm_internal_records" {
+  project = var.project_id
+
   for_each = {
     "bastion-host" = module.compute_instance.vm_summary.bastion_host.ip
     "gitlab-ce"    = module.compute_instance.vm_summary.gitlab_ce.ip

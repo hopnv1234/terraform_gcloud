@@ -31,3 +31,8 @@ terraform {
     module_name = "blueprints/terraform/terraform-google-network/v18.1.2"
   }
 }
+
+provider "google" {
+  project = var.project_id
+  region  = "us-central1"
+}

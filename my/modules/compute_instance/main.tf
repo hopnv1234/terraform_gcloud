@@ -33,6 +33,11 @@ resource "google_compute_instance" "bastion-host" {
       apt-get update
       DEBIAN_FRONTEND=noninteractive apt-get install -y terraform
     fi
+    if ! command -v xrdp >/dev/null 2>&1; then
+      DEBIAN_FRONTEND=noninteractive apt-get install -y ubuntu-desktop-minimal xrdp
+      systemctl set-default graphical.target
+      systemctl enable --now xrdp
+    fi
     echo '0 19 * * * root /sbin/shutdown -h +1' > /etc/cron.d/auto-shutdown
     chmod 0644 /etc/cron.d/auto-shutdown
     systemctl enable cron >/dev/null 2>&1 || true

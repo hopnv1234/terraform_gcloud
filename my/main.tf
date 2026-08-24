@@ -55,6 +55,8 @@ module "compute_instance" {
   project_id       = var.project_id
   network          = module.vpc.network_name
   instance_template = ""
+
+  depends_on = [google_compute_router_nat.private_vms]
 }
 
 module "firewall_rules" {

@@ -63,7 +63,7 @@ resource "google_compute_instance" "gitlab-ce" {
   zone         = local.selected_zone
   name         = "gitlab-ce"
   machine_type = "e2-standard-2"
-  tags         = ["mgmt"]
+  tags         = ["mgmt", "gitlab"]
   metadata = {
     "startup-script" = <<-EOT
     set -eux
@@ -77,6 +77,18 @@ resource "google_compute_instance" "gitlab-ce" {
       apt-get update
       DEBIAN_FRONTEND=noninteractive apt-get install -y iputils-ping
     fi
+    apt-get update
+    DEBIAN_FRONTEND=noninteractive apt-get install -y curl ca-certificates openssh-server gnupg
+    systemctl enable --now ssh
+    if ! command -v gitlab-ctl >/dev/null 2>&1; then
+      curl -fsSL https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | bash
+      EXTERNAL_URL="http://gitlab-ce.ibm-lab.internal" DEBIAN_FRONTEND=noninteractive apt-get install -y gitlab-ce
+    fi
+    if ! command -v gitlab-runner >/dev/null 2>&1; then
+      curl -fsSL https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | bash
+      DEBIAN_FRONTEND=noninteractive apt-get install -y gitlab-runner
+    fi
+    systemctl enable --now gitlab-runner
     echo '0 19 * * * root /sbin/shutdown -h +1' > /etc/cron.d/auto-shutdown
     chmod 0644 /etc/cron.d/auto-shutdown
     systemctl enable cron >/dev/null 2>&1 || true

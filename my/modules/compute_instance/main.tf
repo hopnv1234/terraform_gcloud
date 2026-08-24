@@ -14,10 +14,6 @@ resource "google_compute_instance" "bastion-host" {
   machine_type = "e2-medium"
   tags         = ["bastion", "mgmt"]
 
-  lifecycle {
-    prevent_destroy = true
-  }
-
   metadata = {
     "startup-script" = <<-EOT
     set -eux
@@ -26,6 +22,16 @@ resource "google_compute_instance" "bastion-host" {
     if ! command -v cron >/dev/null 2>&1; then
       apt-get update
       DEBIAN_FRONTEND=noninteractive apt-get install -y cron
+    fi
+    apt-get update
+    DEBIAN_FRONTEND=noninteractive apt-get install -y iputils-ping rsync git ca-certificates curl gnupg
+    if ! command -v terraform >/dev/null 2>&1; then
+      install -m 0755 -d /etc/apt/keyrings
+      curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /etc/apt/keyrings/hashicorp-archive-keyring.gpg
+      chmod 0644 /etc/apt/keyrings/hashicorp-archive-keyring.gpg
+      echo "deb [signed-by=/etc/apt/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(. /etc/os-release && echo \"$VERSION_CODENAME\") main" > /etc/apt/sources.list.d/hashicorp.list
+      apt-get update
+      DEBIAN_FRONTEND=noninteractive apt-get install -y terraform
     fi
     echo '0 19 * * * root /sbin/shutdown -h +1' > /etc/cron.d/auto-shutdown
     chmod 0644 /etc/cron.d/auto-shutdown

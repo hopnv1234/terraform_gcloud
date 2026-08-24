@@ -27,6 +27,29 @@ module "subnets" {
   network_name = module.vpc.network_name
 }
 
+resource "google_compute_router" "nat" {
+  name    = "vpcibmlab-nat-router"
+  project = var.project_id
+  region  = "us-central1"
+  network = module.vpc.network_self_link
+
+  depends_on = [module.subnets]
+}
+
+resource "google_compute_router_nat" "private_vms" {
+  name                               = "vpcibmlab-private-vms-nat"
+  project                            = var.project_id
+  region                             = google_compute_router.nat.region
+  router                             = google_compute_router.nat.name
+  nat_ip_allocate_option             = "AUTO_ONLY"
+  source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
+
+  subnetwork {
+    name                    = "subnet-mgmt"
+    source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
+  }
+}
+
 module "compute_instance" {
   source           = "./modules/compute_instance"
   project_id       = var.project_id

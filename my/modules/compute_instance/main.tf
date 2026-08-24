@@ -104,6 +104,9 @@ resource "google_compute_instance" "gitlab-ce" {
   network_interface {
     subnetwork = var.subnet-mgmt # Replace with self link to a subnetwork in quotes
     network_ip = "10.0.1.2"
+    access_config {
+      network_tier = "STANDARD"
+    }
   }
 }
 

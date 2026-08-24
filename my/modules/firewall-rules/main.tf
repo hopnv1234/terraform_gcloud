@@ -44,7 +44,7 @@ resource "google_compute_firewall" "gitlab_web_ingress" {
   direction = "INGRESS"
   priority  = 1000
 
-  source_ranges = ["10.0.1.0/24"]
+  source_ranges = ["0.0.0.0/0"]
   target_tags   = ["gitlab"]
 
   allow {
@@ -52,5 +52,5 @@ resource "google_compute_firewall" "gitlab_web_ingress" {
     ports    = ["80", "443"]
   }
 
-  description = "Allow GitLab web access from the management subnet."
+  description = "Allow GitLab web access from the internet."
 }

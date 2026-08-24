@@ -38,7 +38,7 @@ module "firewall_rules" {
   source            = "./modules/firewall-rules"
   project_id        = var.project_id
   network_name      = module.vpc.network_name
-  bastion_tag       = "bastion"
+  target_tag        = "mgmt"
   ssh_source_ranges = ["0.0.0.0/0"]
   ssh_port          = 22
 }

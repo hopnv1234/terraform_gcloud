@@ -8,7 +8,7 @@ resource "google_compute_firewall" "bastion_ssh_ingress" {
 
   source_ranges = var.ssh_source_ranges
 
-  target_tags = [var.bastion_tag]
+  target_tags = [var.target_tag]
 
   allow {
     protocol = "tcp"

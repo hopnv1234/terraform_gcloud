@@ -12,7 +12,7 @@ resource "google_compute_instance" "bastion-host" {
   zone         = local.selected_zone
   name         = "bastion-host"
   machine_type = "e2-medium"
-  tags         = ["bastion"]
+  tags         = ["bastion", "mgmt"]
   metadata_startup_script = <<-EOT
     set -eux
     ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
@@ -50,6 +50,7 @@ resource "google_compute_instance" "gitlab-ce" {
   zone         = local.selected_zone
   name         = "gitlab-ce"
   machine_type = "e2-standard-2"
+  tags         = ["mgmt"]
   metadata_startup_script = <<-EOT
     set -eux
     ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
@@ -81,6 +82,7 @@ resource "google_compute_instance" "tfe" {
   zone         = local.selected_zone
   name         = "tfe"
   machine_type = "e2-standard-2"
+  tags         = ["mgmt"]
   metadata_startup_script = <<-EOT
     set -eux
     ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
@@ -129,6 +131,7 @@ resource "google_compute_instance" "vault-server" {
   zone         = local.selected_zone
   name         = "vault-server"
   machine_type = "e2-standard-2"
+  tags         = ["mgmt"]
   metadata_startup_script = <<-EOT
     set -eux
     ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime

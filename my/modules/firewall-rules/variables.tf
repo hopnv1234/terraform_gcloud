@@ -8,14 +8,14 @@ variable "network_name" {
   type        = string
 }
 
-variable "bastion_tag" {
-  description = "Target tag used by the bastion host VM."
+variable "target_tag" {
+  description = "Target network tag used by the VMs receiving this firewall rule."
   type        = string
-  default     = "bastion"
+  default     = "mgmt"
 }
 
 variable "ssh_source_ranges" {
-  description = "CIDR ranges allowed to reach the bastion via SSH."
+  description = "CIDR ranges allowed to reach the target VMs via SSH."
   type        = list(string)
   default     = ["0.0.0.0/0"]
 }

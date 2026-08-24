@@ -13,7 +13,13 @@ resource "google_compute_instance" "bastion-host" {
   name         = "bastion-host"
   machine_type = "e2-medium"
   tags         = ["bastion", "mgmt"]
-  metadata_startup_script = <<-EOT
+
+  lifecycle {
+    prevent_destroy = true
+  }
+
+  metadata = {
+    "startup-script" = <<-EOT
     set -eux
     ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
     echo 'Asia/Bangkok' > /etc/timezone
@@ -29,7 +35,8 @@ resource "google_compute_instance" "bastion-host" {
     chmod 0644 /etc/cron.d/auto-shutdown
     systemctl enable cron >/dev/null 2>&1 || true
     systemctl restart cron >/dev/null 2>&1 || true
-  EOT
+    EOT
+  }
   boot_disk {
     initialize_params {
       image = "projects/ubuntu-os-cloud/global/images/ubuntu-minimal-2204-jammy-v20260805"
@@ -55,7 +62,8 @@ resource "google_compute_instance" "gitlab-ce" {
   name         = "gitlab-ce"
   machine_type = "e2-standard-2"
   tags         = ["mgmt"]
-  metadata_startup_script = <<-EOT
+  metadata = {
+    "startup-script" = <<-EOT
     set -eux
     ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
     echo 'Asia/Bangkok' > /etc/timezone
@@ -71,7 +79,8 @@ resource "google_compute_instance" "gitlab-ce" {
     chmod 0644 /etc/cron.d/auto-shutdown
     systemctl enable cron >/dev/null 2>&1 || true
     systemctl restart cron >/dev/null 2>&1 || true
-  EOT
+    EOT
+  }
   boot_disk {
     initialize_params {
       image = "projects/ubuntu-os-cloud/global/images/ubuntu-minimal-2204-jammy-v20260805"
@@ -91,7 +100,8 @@ resource "google_compute_instance" "tfe" {
   name         = "tfe"
   machine_type = "e2-standard-2"
   tags         = ["mgmt"]
-  metadata_startup_script = <<-EOT
+  metadata = {
+    "startup-script" = <<-EOT
     set -eux
     ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
     echo 'Asia/Bangkok' > /etc/timezone
@@ -123,7 +133,8 @@ resource "google_compute_instance" "tfe" {
     chmod 0644 /etc/cron.d/auto-shutdown
     systemctl enable cron >/dev/null 2>&1 || true
     systemctl restart cron >/dev/null 2>&1 || true
-  EOT
+    EOT
+  }
   boot_disk {
     initialize_params {
       image = "projects/ubuntu-os-cloud/global/images/ubuntu-minimal-2204-jammy-v20260805"
@@ -144,7 +155,8 @@ resource "google_compute_instance" "vault-server" {
   name         = "vault-server"
   machine_type = "e2-standard-2"
   tags         = ["mgmt"]
-  metadata_startup_script = <<-EOT
+  metadata = {
+    "startup-script" = <<-EOT
     set -eux
     ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
     echo 'Asia/Bangkok' > /etc/timezone
@@ -160,7 +172,8 @@ resource "google_compute_instance" "vault-server" {
     chmod 0644 /etc/cron.d/auto-shutdown
     systemctl enable cron >/dev/null 2>&1 || true
     systemctl restart cron >/dev/null 2>&1 || true
-  EOT
+    EOT
+  }
   boot_disk {
     initialize_params {
       image = "projects/ubuntu-os-cloud/global/images/ubuntu-minimal-2204-jammy-v20260805"

@@ -208,3 +208,48 @@ resource "google_compute_instance" "vault-server" {
     network_ip = "10.0.1.4"
   }
 }
+
+resource "google_container_cluster" "private" {
+  name     = "vpcibmlab-private-gke"
+  project  = var.project_id
+  location = var.region
+
+  network    = var.network
+  subnetwork = var.subnet_gke
+
+  remove_default_node_pool = true
+  initial_node_count       = 1
+
+  private_cluster_config {
+    enable_private_nodes    = true
+    enable_private_endpoint = true
+    master_ipv4_cidr_block  = "172.16.0.0/28"
+  }
+
+  ip_allocation_policy {
+    cluster_secondary_range_name  = "gke-pods"
+    services_secondary_range_name = "gke-services"
+  }
+
+  workload_identity_config {
+    workload_pool = "${var.project_id}.svc.id.goog"
+  }
+
+  release_channel {
+    channel = "REGULAR"
+  }
+}
+
+resource "google_container_node_pool" "private" {
+  name       = "vpcibmlab-private-gke-pool"
+  project    = var.project_id
+  location   = google_container_cluster.private.location
+  cluster    = google_container_cluster.private.name
+  node_count = 3
+
+  node_config {
+    machine_type = "e2-standard-2"
+    disk_type    = "pd-balanced"
+    oauth_scopes = ["https://www.googleapis.com/auth/cloud-platform"]
+  }
+}

@@ -31,7 +31,7 @@ variable "subnet-mgmt" {
   type        = string
   default     = "subnet-mgmt"
 }
-variable "subnet-gke" {
+variable "subnet_gke" {
   description = "Subnet to deploy to. Only one of network or subnetwork should be specified."
   type        = string
   default     = "subnet-gke"

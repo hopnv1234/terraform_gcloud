@@ -82,5 +82,16 @@ variable "subnets" {
 variable "secondary_ranges" {
   type        = map(list(object({ range_name = string, ip_cidr_range = optional(string), reserved_internal_range = optional(string) })))
   description = "Secondary ranges that will be used in some of the subnets"
-  default     = {}
+  default = {
+    subnet-gke = [
+      {
+        range_name    = "gke-pods"
+        ip_cidr_range = "10.4.0.0/16"
+      },
+      {
+        range_name    = "gke-services"
+        ip_cidr_range = "10.5.0.0/20"
+      }
+    ]
+  }
 }

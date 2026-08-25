@@ -48,6 +48,11 @@ resource "google_compute_router_nat" "private_vms" {
     name                    = "subnet-mgmt"
     source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
   }
+
+  subnetwork {
+    name                    = "subnet-gke"
+    source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
+  }
 }
 
 module "compute_instance" {
@@ -55,6 +60,7 @@ module "compute_instance" {
   project_id       = var.project_id
   network          = module.vpc.network_name
   instance_template = ""
+  depends_on       = [module.subnets, google_compute_router_nat.private_vms]
 }
 
 module "firewall_rules" {

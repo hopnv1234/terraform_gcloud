@@ -242,6 +242,10 @@ resource "google_container_cluster" "private" {
     master_ipv4_cidr_block  = "172.16.0.0/28"
   }
 
+  master_authorized_networks_config {
+    enable_master_authorized_networks = true
+  }
+
   ip_allocation_policy {
     cluster_secondary_range_name  = "gke-pods"
     services_secondary_range_name = "gke-services"

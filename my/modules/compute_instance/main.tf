@@ -243,7 +243,10 @@ resource "google_container_cluster" "private" {
   }
 
   master_authorized_networks_config {
-    enable_master_authorized_networks = true
+    cidr_blocks {
+      cidr_block   = "10.0.1.0/24"
+      display_name = "Management subnet"
+    }
   }
 
   ip_allocation_policy {

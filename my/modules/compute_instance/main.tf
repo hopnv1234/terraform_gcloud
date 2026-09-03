@@ -179,17 +179,33 @@ resource "google_compute_instance" "vault-server" {
   tags         = ["mgmt"]
   metadata = {
     "startup-script" = <<-EOT
+    # Stop on errors and print commands for easier startup-script troubleshooting.
     set -eux
+    # Configure the VM timezone for the lab environment.
     ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
     echo 'Asia/Bangkok' > /etc/timezone
+    # Install and start cron so the VM can shut down automatically each evening.
     if ! command -v cron >/dev/null 2>&1; then
       apt-get update
       DEBIAN_FRONTEND=noninteractive apt-get install -y cron
     fi
+    # Install ping for basic network connectivity checks.
     if ! command -v ping >/dev/null 2>&1; then
       apt-get update
       DEBIAN_FRONTEND=noninteractive apt-get install -y iputils-ping
     fi
+    # Add the official HashiCorp repository and install Vault if it is not installed.
+    if ! command -v vault >/dev/null 2>&1; then
+      apt-get update
+      DEBIAN_FRONTEND=noninteractive apt-get install -y gpg wget
+      install -m 0755 -d /etc/apt/keyrings
+      wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /etc/apt/keyrings/hashicorp-archive-keyring.gpg
+      chmod 0644 /etc/apt/keyrings/hashicorp-archive-keyring.gpg
+      echo "deb [signed-by=/etc/apt/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(. /etc/os-release && echo \"$VERSION_CODENAME\") main" > /etc/apt/sources.list.d/hashicorp.list
+      apt-get update
+      DEBIAN_FRONTEND=noninteractive apt-get install -y vault
+    fi
+    # Schedule the VM to shut down at 19:00 and ensure cron reloads the schedule.
     echo '0 19 * * * root /sbin/shutdown -h +1' > /etc/cron.d/auto-shutdown
     chmod 0644 /etc/cron.d/auto-shutdown
     systemctl enable cron >/dev/null 2>&1 || true

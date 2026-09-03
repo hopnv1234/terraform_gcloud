@@ -88,3 +88,20 @@ resource "google_compute_firewall" "bastion_internal_egress" {
 
   description = "Allow all internal protocols and ports from the bastion to Vault, Terraform, GKE, and GitLab networks."
 }
+
+resource "google_compute_firewall" "bastion_to_management_vms" {
+  name    = "allow-bastion-to-management-vms"
+  project = var.project_id
+  network = var.network_name
+
+  direction    = "INGRESS"
+  priority     = 900
+  source_tags  = ["bastion"]
+  target_tags  = ["mgmt"]
+
+  allow {
+    protocol = "all"
+  }
+
+  description = "Allow the bastion to access all protocols and ports on Vault, Terraform, and GitLab VMs."
+}

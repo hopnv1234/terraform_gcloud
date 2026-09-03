@@ -16,28 +16,52 @@ resource "google_compute_instance" "bastion-host" {
 
   metadata = {
     "startup-script" = <<-EOT
+    # Stop on errors and print commands for startup-script troubleshooting.
     set -eux
+    # Configure the VM timezone for the lab environment.
     ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
     echo 'Asia/Bangkok' > /etc/timezone
+    # Install and start cron so the bastion can shut down automatically each evening.
     if ! command -v cron >/dev/null 2>&1; then
       apt-get update
       DEBIAN_FRONTEND=noninteractive apt-get install -y cron
     fi
+    # Install common administration and file-transfer tools used on the bastion.
     apt-get update
     DEBIAN_FRONTEND=noninteractive apt-get install -y iputils-ping rsync git ca-certificates curl gnupg
-    if ! command -v terraform >/dev/null 2>&1; then
+    # Configure the Google Cloud repository and install GKE command-line tools.
+    if ! command -v gcloud >/dev/null 2>&1; then
+      install -m 0755 -d /etc/apt/keyrings
+      curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /etc/apt/keyrings/cloud.google.gpg
+      chmod 0644 /etc/apt/keyrings/cloud.google.gpg
+      echo "deb [signed-by=/etc/apt/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" > /etc/apt/sources.list.d/google-cloud-sdk.list
+      apt-get update
+      DEBIAN_FRONTEND=noninteractive apt-get install -y google-cloud-sdk google-cloud-cli-gke-gcloud-auth-plugin kubectl
+    fi
+    # Configure the HashiCorp repository and install Terraform and Vault.
+    if ! command -v terraform >/dev/null 2>&1 || ! command -v vault >/dev/null 2>&1; then
       install -m 0755 -d /etc/apt/keyrings
       curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /etc/apt/keyrings/hashicorp-archive-keyring.gpg
       chmod 0644 /etc/apt/keyrings/hashicorp-archive-keyring.gpg
       echo "deb [signed-by=/etc/apt/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(. /etc/os-release && echo \"$VERSION_CODENAME\") main" > /etc/apt/sources.list.d/hashicorp.list
       apt-get update
-      DEBIAN_FRONTEND=noninteractive apt-get install -y terraform
+      DEBIAN_FRONTEND=noninteractive apt-get install -y terraform vault
     fi
+    # Configure Vault connection variables for interactive bastion sessions.
+    printf '%s\n' \
+      'export VAULT_ADDR="https://vault-server.ibm-lab.internal:8200"' \
+      'export VAULT_CACERT="/etc/vault.d/tls/vault-server.ibm-lab.internal.crt"' \
+      > /etc/profile.d/vault.sh
+    chmod 0644 /etc/profile.d/vault.sh
+    export VAULT_ADDR="https://vault-server.ibm-lab.internal:8200"
+    export VAULT_CACERT="/etc/vault.d/tls/vault-server.ibm-lab.internal.crt"
+    # Install and enable a graphical remote desktop for bastion administration.
     if ! command -v xrdp >/dev/null 2>&1; then
       DEBIAN_FRONTEND=noninteractive apt-get install -y ubuntu-desktop-minimal xrdp
       systemctl set-default graphical.target
       systemctl enable --now xrdp
     fi
+    # Schedule the bastion to shut down at 19:00 and reload the cron schedule.
     echo '0 19 * * * root /sbin/shutdown -h +1' > /etc/cron.d/auto-shutdown
     chmod 0644 /etc/cron.d/auto-shutdown
     systemctl enable cron >/dev/null 2>&1 || true
@@ -228,7 +252,7 @@ resource "google_compute_instance" "vault-server" {
 resource "google_container_cluster" "private" {
   name     = "vpcibmlab-private-gke"
   project  = var.project_id
-  location = var.region
+  location = local.selected_zone
 
   network    = var.network
   subnetwork = var.subnet_gke
@@ -268,6 +292,7 @@ resource "google_container_node_pool" "private" {
   project    = var.project_id
   location   = google_container_cluster.private.location
   cluster    = google_container_cluster.private.name
+  # Zonal cluster: three nodes in the selected zone.
   node_count = 3
 
   node_config {

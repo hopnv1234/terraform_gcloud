@@ -250,9 +250,10 @@ resource "google_compute_instance" "vault-server" {
 }
 
 resource "google_container_cluster" "private" {
-  name     = "vpcibmlab-private-gke"
-  project  = var.project_id
-  location = local.selected_zone
+  name                = "vpcibmlab-private-gke"
+  project             = var.project_id
+  location            = local.selected_zone
+  deletion_protection = false
 
   network    = var.network
   subnetwork = var.subnet_gke

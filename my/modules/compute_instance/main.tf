@@ -85,6 +85,13 @@ resource "google_compute_instance" "bastion-host" {
     subnetwork = var.subnet-mgmt # Replace with self link to a subnetwork in quotes
     network_ip = "10.0.1.10"
   }
+
+  lifecycle {
+    ignore_changes = [
+      metadata["ssh-keys"],
+      service_account,
+    ]
+  }
 }
 
 resource "google_compute_instance" "gitlab-ce" {
@@ -136,6 +143,13 @@ resource "google_compute_instance" "gitlab-ce" {
     access_config {
       network_tier = "STANDARD"
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      metadata["ssh-keys"],
+      service_account,
+    ]
   }
 }
 
@@ -192,6 +206,13 @@ resource "google_compute_instance" "tfe" {
     subnetwork = var.subnet-mgmt # Replace with self link to a subnetwork in quotes
     network_ip = "10.0.1.3"
   }
+
+  lifecycle {
+    ignore_changes = [
+      metadata["ssh-keys"],
+      service_account,
+    ]
+  }
 }
 
 
@@ -246,6 +267,13 @@ resource "google_compute_instance" "vault-server" {
   network_interface {
     subnetwork = var.subnet-mgmt # Replace with self link to a subnetwork in quotes
     network_ip = "10.0.1.4"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      metadata["ssh-keys"],
+      service_account,
+    ]
   }
 }
 

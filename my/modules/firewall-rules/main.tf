@@ -77,17 +77,16 @@ resource "google_compute_firewall" "bastion_to_private_cluster_api" {
   project = var.project_id
   network = var.network_name
 
-  direction     = "INGRESS"
-  priority      = 900
-  source_ranges = ["10.0.1.0/24", "10.0.4.0/24", "10.4.0.0/16", "10.5.0.0/20"]
-  target_ranges = ["172.16.0.0/24"]
+  direction          = "EGRESS"
+  priority           = 900
+  destination_ranges = ["172.16.0.0/24"]
 
   allow {
     protocol = "tcp"
     ports    = ["443"]
   }
 
-  description = "Allow bastion and internal management networks to reach the private Kubernetes API server over HTTPS."
+  description = "Allow bastion-originated traffic to reach the private Kubernetes API server over HTTPS."
 }
 
 resource "google_compute_firewall" "bastion_internal_egress" {

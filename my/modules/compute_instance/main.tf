@@ -47,6 +47,13 @@ resource "google_compute_instance" "bastion-host" {
       apt-get update
       DEBIAN_FRONTEND=noninteractive apt-get install -y terraform vault
     fi
+    # Install Helm for Kubernetes package management if it is not installed.
+    if ! command -v helm >/dev/null 2>&1; then
+      curl -fsSL -o /tmp/get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+      chmod 700 /tmp/get_helm.sh
+      /tmp/get_helm.sh
+      rm -f /tmp/get_helm.sh
+    fi
     # Configure Vault connection variables for interactive bastion sessions.
     printf '%s\n' \
       'export VAULT_ADDR="https://vault-server.ibm-lab.internal:8200"' \

@@ -85,6 +85,26 @@ resource "google_dns_managed_zone" "private_internal" {
   }
 }
 
+resource "google_dns_managed_zone" "gke_cluster_local_forwarding" {
+  project  = var.project_id
+  name     = "gke-cluster-local-forwarding"
+  dns_name = "cluster.local."
+
+  visibility = "private"
+
+  private_visibility_config {
+    networks {
+      network_url = module.vpc.network_self_link
+    }
+  }
+
+  forwarding_config {
+    target_name_servers {
+      ipv4_address = "10.5.0.10"
+    }
+  }
+}
+
 resource "google_dns_record_set" "vm_internal_records" {
   project = var.project_id
 

@@ -89,6 +89,45 @@ resource "google_compute_firewall" "bastion_to_private_cluster_api" {
   description = "Allow bastion-originated traffic to reach the private Kubernetes API server over HTTPS."
 }
 
+resource "google_compute_firewall" "management_to_gke_dns" {
+  name              = "allow-management-to-gke-dns"
+  project           = var.project_id
+  network           = var.network_name
+  direction         = "EGRESS"
+  priority          = 900
+  destination_ranges = ["10.5.0.10/32"]
+  target_tags       = ["mgmt"]
+
+  allow {
+    protocol = "udp"
+    ports    = ["53"]
+  }
+
+  allow {
+    protocol = "tcp"
+    ports    = ["53"]
+  }
+
+  description = "Allow management VMs to resolve cluster.local names through the GKE DNS service."
+}
+
+resource "google_compute_firewall" "management_to_gke_postgres" {
+  name              = "allow-management-to-gke-postgres"
+  project           = var.project_id
+  network           = var.network_name
+  direction         = "EGRESS"
+  priority          = 900
+  destination_ranges = ["10.4.0.0/16", "10.5.0.0/20"]
+  target_tags       = ["mgmt"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["5432"]
+  }
+
+  description = "Allow management VMs to reach PostgreSQL through GKE pod or service addresses."
+}
+
 resource "google_compute_firewall" "bastion_internal_egress" {
   name    = "allow-bastion-to-internal-services"
   project = var.project_id

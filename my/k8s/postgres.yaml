@@ -36,9 +36,11 @@ spec:
             - name: POSTGRES_USER
               value: "vaultadmin"
             - name: POSTGRES_PASSWORD
-              value: "temp-bootstrap-password"
+              value: "123456!@#$%^"
             - name: POSTGRES_DB
               value: "labdb"
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
           resources:
             requests:
               cpu: "250m"

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  namespace: ibm-techxchange-lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-app
+  template:
+    metadata:
+      labels:
+        app: demo-app
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "app-pod"
+        vault.hashicorp.com/agent-inject-secret-db-creds: "database/creds/app-readonly"
+    spec:
+      serviceAccountName: app-pod-sa
+      containers:
+        - name: app
+          image: nginx:latest
+          ports:
+            - containerPort: 80

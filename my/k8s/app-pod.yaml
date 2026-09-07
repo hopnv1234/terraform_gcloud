@@ -16,9 +16,8 @@ spec:
         vault.hashicorp.com/agent-inject: "true"
         vault.hashicorp.com/role: "app-pod"
         vault.hashicorp.com/agent-inject-secret-db-creds: "database/creds/app-readonly"
-        vault.hashicorp.com/ca-cert: "/vault/tls/ca.crt"
+        vault.hashicorp.com/ca-cert: "/vault/custom/ca.crt"
         vault.hashicorp.com/agent-extra-secret: "vault-ca-cert"
-        vault.hashicorp.com/agent-volume-mount: "vault-ca-cert:/vault/tls"
     spec:
       serviceAccountName: app-pod-sa
       containers:

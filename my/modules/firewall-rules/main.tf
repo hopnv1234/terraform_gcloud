@@ -72,6 +72,24 @@ resource "google_compute_firewall" "bastion_internal_ingress" {
   description = "Allow all internal protocols and ports from Vault, Terraform, GKE, and GitLab networks to the bastion."
 }
 
+resource "google_compute_firewall" "bastion_to_private_cluster_api" {
+  name    = "allow-bastion-to-private-cluster-api"
+  project = var.project_id
+  network = var.network_name
+
+  direction     = "INGRESS"
+  priority      = 900
+  source_ranges = ["10.0.1.0/24", "10.0.4.0/24", "10.4.0.0/16", "10.5.0.0/20"]
+  target_ranges = ["172.16.0.0/24"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["443"]
+  }
+
+  description = "Allow bastion and internal management networks to reach the private Kubernetes API server over HTTPS."
+}
+
 resource "google_compute_firewall" "bastion_internal_egress" {
   name    = "allow-bastion-to-internal-services"
   project = var.project_id

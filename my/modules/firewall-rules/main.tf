@@ -128,6 +128,23 @@ resource "google_compute_firewall" "management_to_gke_postgres" {
   description = "Allow management VMs to reach PostgreSQL through GKE pod or service addresses."
 }
 
+resource "google_compute_firewall" "mgmt_to_gke_postgres_ingress" {
+  name        = "allow-mgmt-to-gke-postgres-ingress"
+  project     = var.project_id
+  network     = var.network_name
+  direction   = "INGRESS"
+  priority    = 900
+  source_tags = ["mgmt"]
+  target_tags = ["gke-vpcibmlab-private-gke-a84f2291-node"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["5432"]
+  }
+
+  description = "Allow management VMs to reach PostgreSQL on the private GKE nodes."
+}
+
 resource "google_compute_firewall" "bastion_internal_egress" {
   name    = "allow-bastion-to-internal-services"
   project = var.project_id

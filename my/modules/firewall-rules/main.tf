@@ -145,6 +145,23 @@ resource "google_compute_firewall" "mgmt_to_gke_postgres_ingress" {
   description = "Allow management VMs to reach PostgreSQL on the private GKE nodes."
 }
 
+resource "google_compute_firewall" "gke_pods_to_vault" {
+  name         = "allow-gke-pods-to-vault"
+  project      = var.project_id
+  network      = var.network_name
+  direction    = "INGRESS"
+  priority     = 900
+  source_ranges = ["10.4.0.0/16"]
+  target_tags  = ["mgmt"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["8200", "8201"]
+  }
+
+  description = "Allow GKE pods to access Vault API and cluster traffic on management VMs."
+}
+
 resource "google_compute_firewall" "bastion_internal_egress" {
   name    = "allow-bastion-to-internal-services"
   project = var.project_id

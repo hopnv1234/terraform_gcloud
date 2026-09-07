@@ -55,6 +55,8 @@ resource "google_compute_instance" "bastion-host" {
     chmod 0644 /etc/profile.d/vault.sh
     export VAULT_ADDR="https://vault-server.ibm-lab.internal:8200"
     export VAULT_CACERT="/etc/vault.d/tls/vault-server.ibm-lab.internal.crt"
+    # Force traffic to the GKE private control plane through the management NIC.
+    ip route replace 172.16.0.0/28 via 10.0.1.1 dev ens5 || ip route add 172.16.0.0/28 via 10.0.1.1 dev ens5
     # Install and enable a graphical remote desktop for bastion administration.
     if ! command -v xrdp >/dev/null 2>&1; then
       DEBIAN_FRONTEND=noninteractive apt-get install -y ubuntu-desktop-minimal xrdp

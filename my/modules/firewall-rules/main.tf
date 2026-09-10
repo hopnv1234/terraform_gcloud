@@ -36,6 +36,22 @@ resource "google_compute_firewall" "internal_icmp_ingress" {
   description = "Allow ping between management VMs."
 }
 
+resource "google_compute_firewall" "management_internal_ingress" {
+  name        = "allow-management-to-management"
+  project     = var.project_id
+  network     = var.network_name
+  direction   = "INGRESS"
+  priority    = 900
+  source_tags = ["mgmt"]
+  target_tags = ["mgmt"]
+
+  allow {
+    protocol = "all"
+  }
+
+  description = "Allow management VMs to communicate with one another."
+}
+
 resource "google_compute_firewall" "gitlab_web_ingress" {
   name    = "allow-gitlab-web-from-management"
   project = var.project_id

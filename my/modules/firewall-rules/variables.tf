@@ -37,4 +37,10 @@ variable "vpn_internal_source_ranges" {
   type        = list(string)
   default     = ["192.168.0.0/24", "169.254.0.0/16"]
 }
+
+variable "onprem_to_vpc_source_ranges" {
+  description = "On-premises CIDR ranges allowed to send TCP, UDP, and ICMP traffic to the VPC."
+  type        = list(string)
+  default     = ["192.168.0.0/24"]
+}
     

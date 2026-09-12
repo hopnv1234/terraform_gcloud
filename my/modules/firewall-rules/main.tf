@@ -249,3 +249,26 @@ resource "google_compute_firewall" "vpn_internal_traffic_ingress" {
 
   description = "Allow ICMP traffic from on-premises and link-local networks for VPN connectivity testing."
 }
+
+resource "google_compute_firewall" "onprem_to_vpc_ingress" {
+  name          = "allow-onprem-to-vpc"
+  project       = var.project_id
+  network       = var.network_name
+  direction     = "INGRESS"
+  priority      = 1000
+  source_ranges = var.onprem_to_vpc_source_ranges
+
+  allow {
+    protocol = "tcp"
+  }
+
+  allow {
+    protocol = "udp"
+  }
+
+  allow {
+    protocol = "icmp"
+  }
+
+  description = "Allow all TCP, UDP, and ICMP traffic from on-premises networks."
+}

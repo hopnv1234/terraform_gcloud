@@ -31,4 +31,10 @@ variable "vpn_bgp_source_ranges" {
   type        = list(string)
   default     = ["192.168.0.0/24"]
 }
+
+variable "vpn_internal_source_ranges" {
+  description = "On-premises and link-local CIDR ranges allowed to send internal ICMP traffic."
+  type        = list(string)
+  default     = ["192.168.0.0/24", "169.254.0.0/16"]
+}
     

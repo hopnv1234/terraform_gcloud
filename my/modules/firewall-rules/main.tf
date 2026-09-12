@@ -233,3 +233,19 @@ resource "google_compute_firewall" "onprem_vpn_bgp_ingress" {
 
   description = "Allow IPsec/IKE and BGP traffic from on-premises networks."
 }
+
+resource "google_compute_firewall" "vpn_internal_traffic_ingress" {
+  name          = "allow-vpn-internal-traffic"
+  project       = var.project_id
+  network       = var.network_name
+  direction     = "INGRESS"
+  priority      = 1000
+  source_ranges = var.vpn_internal_source_ranges
+  target_tags   = [var.target_tag]
+
+  allow {
+    protocol = "icmp"
+  }
+
+  description = "Allow ICMP traffic from on-premises and link-local networks for VPN connectivity testing."
+}

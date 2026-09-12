@@ -211,3 +211,25 @@ resource "google_compute_firewall" "bastion_to_management_vms" {
 
   description = "Allow the bastion to access all protocols and ports on Vault, Terraform, and GitLab VMs."
 }
+
+resource "google_compute_firewall" "onprem_vpn_bgp_ingress" {
+  name          = "allow-onprem-vpn-bgp"
+  project       = var.project_id
+  network       = var.network_name
+  direction     = "INGRESS"
+  priority      = 1000
+  source_ranges = var.vpn_bgp_source_ranges
+  target_tags   = [var.target_tag]
+
+  allow {
+    protocol = "udp"
+    ports    = ["500", "4500"]
+  }
+
+  allow {
+    protocol = "tcp"
+    ports    = ["179"]
+  }
+
+  description = "Allow IPsec/IKE and BGP traffic from on-premises networks."
+}

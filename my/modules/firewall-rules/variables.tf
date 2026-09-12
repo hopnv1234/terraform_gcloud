@@ -25,4 +25,10 @@ variable "ssh_port" {
   type        = number
   default     = 22
 }
+
+variable "vpn_bgp_source_ranges" {
+  description = "On-premises CIDR ranges allowed to establish IPsec and BGP connections."
+  type        = list(string)
+  default     = ["192.168.0.0/24"]
+}
     

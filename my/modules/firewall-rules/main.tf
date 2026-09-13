@@ -218,7 +218,7 @@ resource "google_compute_firewall" "onprem_vpn_bgp_ingress" {
   network       = var.network_name
   direction     = "INGRESS"
   priority      = 1000
-  source_ranges = var.vpn_bgp_source_ranges
+  source_ranges = ["20.20.20.0/24"]
   target_tags   = [var.target_tag]
 
   allow {
@@ -240,7 +240,7 @@ resource "google_compute_firewall" "vpn_internal_traffic_ingress" {
   network       = var.network_name
   direction     = "INGRESS"
   priority      = 1000
-  source_ranges = var.vpn_internal_source_ranges
+  source_ranges = ["20.20.20.0/24", "169.254.0.0/16"]
   target_tags   = [var.target_tag]
 
   allow {
@@ -256,7 +256,7 @@ resource "google_compute_firewall" "onprem_to_vpc_ingress" {
   network       = var.network_name
   direction     = "INGRESS"
   priority      = 1000
-  source_ranges = var.onprem_to_vpc_source_ranges
+  source_ranges = ["20.20.20.0/24"]
 
   allow {
     protocol = "tcp"

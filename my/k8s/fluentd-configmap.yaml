@@ -23,7 +23,7 @@ data:
       program falco-fluentd
       severity debug
       facility user
-      <buffer tag>
+      <buffer>
       </buffer>
       <format>
         @type single_value

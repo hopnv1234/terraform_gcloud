@@ -16,10 +16,17 @@ data:
     </source>
 
     <match **>
-      @type syslog
+      @type remote_syslog
       host 192.168.210.227
       port 514
       protocol udp
       program falco-fluentd
-      syslog_token FALCOFLUENTD
+      severity debug
+      facility user
+      <buffer tag>
+      </buffer>
+      <format>
+        @type single_value
+        message_key message
+      </format>
     </match>

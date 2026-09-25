@@ -309,6 +309,10 @@ resource "google_container_cluster" "private" {
       cidr_block   = "10.0.1.0/24"
       display_name = "Management subnet"
     }
+
+    cidr_blocks {
+      cidr_block = "10.0.0.0/24"
+    }
   }
 
   ip_allocation_policy {

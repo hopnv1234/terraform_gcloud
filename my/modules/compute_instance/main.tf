@@ -80,7 +80,7 @@ resource "google_compute_instance" "bastion-host" {
   boot_disk {
     initialize_params {
       image = "projects/ubuntu-os-cloud/global/images/ubuntu-minimal-2204-jammy-v20260805"
-      size  = 10
+      size  = 15
     }
   }
   network_interface {

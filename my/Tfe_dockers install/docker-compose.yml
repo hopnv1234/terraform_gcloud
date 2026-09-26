@@ -11,6 +11,10 @@ services:
       TFE_TLS_KEY_FILE: "/etc/ssl/private/terraform-enterprise/key.pem"
       TFE_TLS_CA_BUNDLE_FILE: "/etc/ssl/private/terraform-enterprise/bundle.pem"
       TFE_IACT_SUBNETS: "10.0.0.0/8"
+      environment:
+      
+      TFE_LOG_FORWARDING_ENABLED: "true"
+      TFE_LOG_FORWARDING_CONFIG_PATH: "/var/tmp/qradar_config/fluent-bit.conf"
     cap_add:
       - IPC_LOCK
     read_only: true
@@ -33,5 +37,8 @@ services:
       - type: volume
         source: terraform-enterprise-cache
         target: /var/cache/tfe-task-worker/terraform
+      - type: bind
+        source: /opt/tfe-logging/fluent-bit.conf
+        target: /var/tmp/qradar_config/fluent-bit.conf
 volumes:
   terraform-enterprise-cache:

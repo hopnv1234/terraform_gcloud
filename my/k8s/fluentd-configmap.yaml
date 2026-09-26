@@ -8,6 +8,7 @@ data:
     <source>
       @type tail
       path /var/log/containers/*.log
+      exclude_path ["/var/log/containers/fluentd-*.log"]
       pos_file /var/log/fluentd-containers.log.pos
       tag kubernetes.*
       <parse>

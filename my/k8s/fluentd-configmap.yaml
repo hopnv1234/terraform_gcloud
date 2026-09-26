@@ -7,16 +7,15 @@ data:
   fluent.conf: |
     <source>
       @type tail
-      path /var/log/containers/*.log
-      exclude_path ["/var/log/containers/fluentd-*.log"]
-      pos_file /var/log/fluentd-containers.log.pos
-      tag kubernetes.*
+      path /var/log/containers/falco-*.log
+      pos_file /var/log/fluentd-falco.log.pos
+      tag falco.*
       <parse>
-        @type json
+        @type none
       </parse>
     </source>
 
-    <match **>
+    <match falco.**>
       @type remote_syslog
       host 192.168.210.227
       port 514
